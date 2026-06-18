@@ -1,9 +1,6 @@
 package main
-
 import "fmt"
-
 const NMAX int = 100
-
 type Task struct {
 	Nama         string
 	Ruangan      string
@@ -12,7 +9,6 @@ type Task struct {
 	SudahSelesai bool
 }
 type tabTask [NMAX]Task
-
 func inisialisasiData(A *tabTask, n *int) {
 
 	(*A)[0] = Task{"Menyapu", "RuangTamu", 2, 15, true}
@@ -50,9 +46,9 @@ func tampilkanTugas(A tabTask, n int) {
 	var status string
 
 	fmt.Println("\n=== DAFTAR TUGAS ===")
-
+	//mengunjungi setiap index
 	for i = 0; i < n; i++ {
-
+		//mengecek status tugas
 		if A[i].SudahSelesai {
 			status = "Selesai"
 		} else {
@@ -112,12 +108,12 @@ func hapusTugas(A *tabTask, n *int) {
 	fmt.Scan(&idx)
 
 	if idx >= 0 && idx < *n {
-
+		//menggeser data 
 		for i = idx; i < *n-1; i++ {
 
 			(*A)[i] = (*A)[i+1]
 		}
-
+		//untuk mengurangi datanya 
 		*n = *n - 1
 
 		fmt.Println("Data berhasil dihapus")
@@ -137,7 +133,7 @@ func sequentialSearchNama(A tabTask, n int) {
 	fmt.Scan(&cari)
 
 	ketemu = false
-
+	// memeriksa semua data
 	for i = 0; i < n; i++ {
 
 		if A[i].Nama == cari {
@@ -187,9 +183,9 @@ func selectionSortKesulitan(A *tabTask, n int, asc bool) {
 	var temp Task
 
 	for i = 0; i < n-1; i++ {
-
+		// menyimpan nilai minimun sementara
 		idx = i
-
+		// mencari lg nilai yg lebih kecil dari si idx = i 
 		for j = i + 1; j < n; j++ {
 
 			if asc {
@@ -285,22 +281,22 @@ func insertionSortKesulitan(A *tabTask, n int, asc bool) {
 	for i = 1; i < n; i++ {
 
 		temp = (*A)[i]
-		j = i - 1
+		j = i - 1 //selalu dipindahkan ke kiri
 
 		if asc {
-
+			// geser semua nilai besar
 			for j >= 0 && (*A)[j].Kesulitan > temp.Kesulitan {
 
 				(*A)[j+1] = (*A)[j]
-				j--
+				j = j - 1
 			}
 
 		} else {
-
+			// geser semua nilai kecil
 			for j >= 0 && (*A)[j].Kesulitan < temp.Kesulitan {
 
 				(*A)[j+1] = (*A)[j]
-				j--
+				j = j - 1
 			}
 		}
 
@@ -310,13 +306,17 @@ func insertionSortKesulitan(A *tabTask, n int, asc bool) {
 	fmt.Println("Data berhasil diurutkan")
 }
 func binarySearchRuangan(A *tabTask, n int) {
+	
 	var kiri, kanan, tengah int
 	var cari string
 	var i, j int
 	var temp Task
-	// sorting ruangan ascending
+	var ketemu bool 
+	
 	for i = 0; i < n-1; i++ {
+		
 		for j = 0; j < n-i-1; j++ {
+			//ascending
 			if (*A)[j].Ruangan > (*A)[j+1].Ruangan {
 
 				temp = (*A)[j]
@@ -329,15 +329,15 @@ func binarySearchRuangan(A *tabTask, n int) {
 	fmt.Scan(&cari)
 	kiri = 0
 	kanan = n - 1
-	for kiri <= kanan {
+	ketemu = false
+	for kiri <= kanan && !ketemu {
 
 		tengah = (kiri + kanan) / 2
 
 		if (*A)[tengah].Ruangan == cari {
 
-			fmt.Println("Data ditemukan")
-			fmt.Println((*A)[tengah])
-			return
+			ketemu = true 
+			
 		} else if cari < (*A)[tengah].Ruangan {
 
 			kanan = tengah - 1
@@ -347,16 +347,25 @@ func binarySearchRuangan(A *tabTask, n int) {
 			kiri = tengah + 1
 		}
 	}
-	fmt.Println("Data tidak ditemukan")
+	if ketemu {
+		
+		fmt.Println("Data ditemukan")
+		fmt.Println((*A)[tengah])
+		
+	} else {
+		
+		fmt.Println("Data tidak ditemukan")
+		
+	}
 }
 func binarySearchNama(A *tabTask, n int) {
 
 	var kiri, kanan, tengah int
 	var cari string
-
 	var i, j int
 	var temp Task
-
+	var ketemu bool
+	// ini 2 untuk mengurutkan data karena binary harus terurut
 	for i = 0; i < n-1; i++ {
 
 		for j = 0; j < n-i-1; j++ {
@@ -375,16 +384,15 @@ func binarySearchNama(A *tabTask, n int) {
 
 	kiri = 0
 	kanan = n - 1
+	ketemu = false
 
-	for kiri <= kanan {
+	for kiri <= kanan && !ketemu {
 
 		tengah = (kiri + kanan) / 2
 
 		if (*A)[tengah].Nama == cari {
 
-			fmt.Println("Data ditemukan")
-			fmt.Println((*A)[tengah])
-			return
+			ketemu = true
 
 		} else if cari < (*A)[tengah].Nama {
 
@@ -395,8 +403,16 @@ func binarySearchNama(A *tabTask, n int) {
 			kiri = tengah + 1
 		}
 	}
+	if ketemu {
+		
+		fmt.Println("Data ditemukan")
+		fmt.Println((*A)[tengah])
+		
+	} else {
 
 	fmt.Println("Data tidak ditemukan")
+	
+	}
 }
 func tampilkanStatistik(A tabTask, n int) {
 
@@ -440,7 +456,7 @@ func main() {
 
 	inisialisasiData(&daftarTugas, &n)
 
-	for !selesai {
+	for !selesai{
 
 		fmt.Println("\n===== TASKMATE =====")
 		fmt.Println("1. Tambah Tugas")
@@ -485,11 +501,12 @@ func main() {
 			} else if pilih == 3 {
 
 				binarySearchRuangan(&daftarTugas, n)
-
-			} else if pilih == 4 {
+			
+			}  else if pilih == 4 {
 
 				binarySearchNama(&daftarTugas, n)
 			}
+
 
 		} else if menu == 4 {
 
@@ -529,24 +546,24 @@ func main() {
 
 					selectionSortDurasi(&daftarTugas, n, false)
 				}
-
+				
 			} else if pilih == 3 {
-
+				
 				if urut == 1 {
-
+					
 					insertionSortDurasi(&daftarTugas, n, true)
-
+					
 				} else {
-
+					
 					insertionSortDurasi(&daftarTugas, n, false)
-
+					
 				}
 			} else if pilih == 4 {
-
+				
 				if urut == 1 {
-
+					
 					insertionSortKesulitan(&daftarTugas, n, true)
-
+					
 				} else {
 					insertionSortKesulitan(&daftarTugas, n, false)
 				}
@@ -559,11 +576,11 @@ func main() {
 		} else if menu == 6 {
 
 			hapusTugas(&daftarTugas, &n)
-
+			
 		} else if menu == 7 {
-
+			
 			tampilkanStatistik(daftarTugas, n)
-
+			
 		} else if menu == 0 {
 
 			fmt.Println("TerimaKasih telah menggunakan TaskMate!")
